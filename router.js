@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
+const jsonParser = bodyParser.json();
 
 const {BlogPosts} = require('./models');
 
@@ -21,18 +22,49 @@ function makeText(n) {
 
 BlogPosts.create(
 		"What to do If",
-		makeText(242),
+		makeText(24),
 		"Big Jim");
 BlogPosts.create(
 		"Ok, Then this Happened",
-		makeText(242),
+		makeText(22),
 		"Mr. Jim");
 
-
+// GET /blog-posts
 router.get("/",  (req,res) => { 
 	res.json( BlogPosts.get() );
 
 });
+
+// POST /blog-posts
+router.post("/", jsonParser, (req,res) => {
+
+
+});
+
+
+
+// PUT /blog-posts/:id
+router.put("/:id",jsonParser, (req,res) => {
+
+});
+
+
+// DELETE /blog-posts/:id
+router.delete("/:id", (req,res) => {
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 module.exports = router;
