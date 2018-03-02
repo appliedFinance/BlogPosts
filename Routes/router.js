@@ -33,22 +33,50 @@ router.post("/", jsonParser, (req,res) => {
 		}
 	});
 	const newpost = BlogPosts.create( req.body.title,
-												 req.body.content,
-												 req.body.author );
+			req.body.content,
+			req.body.author );
 	res.status(201).json(newpost);
 });
 
-
-
 // PUT /blog-posts/:id
-router.put("/:id",jsonParser, (req,res) => {
+router.put("/:id", jsonParser, (req,res) => {
+	const {id} = req.params;
+	const requiredKeys = ["id","title","content","author","publishDate"];
 
+	// check for all required keys
+	requiredKeys.forEach( t => {
+		if( !(t in req.body) ) {
+			const message = `Missing "${t}" in update body`;
+			say(message);
+			return res.status(400).send(message);
+		}
+	});
+
+	// check the id
+	if (id !== req.body.id) {
+		const message = `ID mis-match: "${id}" != "${req.body.id}"`;
+		say(message);
+		return res.status(400).send(message);
+	}
+
+	// update the post
+	const updatedpost = BlogPosts.update(
+			{  "id": 		id,
+				"title": 	req.body.title,
+				"content": 	req.body.content,
+				"author":  	req.body.author,
+				"publishDate":  req.body.publishDate
+			});
+	say("UPDATED: " + JSON.stringify(updatedpost));
+	res.status(204).end();
 });
 
 
 // DELETE /blog-posts/:id
 router.delete("/:id", (req,res) => {
-
+	BlogPosts.delete(req.params.id);
+	say(`Deleted post with id "${req.params.id}"`);
+	res.status(204).end();
 });
 
 
